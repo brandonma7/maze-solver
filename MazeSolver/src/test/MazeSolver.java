@@ -1,10 +1,7 @@
 package test;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Timer;
-
+import java.awt.event.*;
 import javax.swing.*;
 
 public class MazeSolver {
@@ -25,10 +22,11 @@ public class MazeSolver {
 	public MazeSolver(){
 		maze = null;
 		this.promptDimensions();
-		while(maze == null);
+		while(maze == null){
+			System.out.println("flag");
+		}
 		
 		rbt = new RightHandRobot(0, 0, Room.EAST);
-		timer = new Timer();
 
 		JFrame window = new JFrame("Maze Solver 1.0");
 		
@@ -38,6 +36,8 @@ public class MazeSolver {
 		
 		window.setSize(WIDTH, HEIGHT);
 		mainCont.setLayout(new BoxLayout(mainCont, BoxLayout.PAGE_AXIS));
+		
+		gridArea.setSize(WIDTH - 100, WIDTH - 100);
 		
 		JButton startLocation = new JButton("Set Start Location");
 		JButton endLocation = new JButton("Set End Location");
@@ -53,6 +53,8 @@ public class MazeSolver {
 		buttonArea.add(clear);
 		buttonArea.add(start);
 		
+		maze.addMazeToPanel(gridArea);
+		
 		mainCont.add(gridArea);
 		mainCont.add(buttonArea);
 		
@@ -62,6 +64,15 @@ public class MazeSolver {
 		window.setResizable(false);
 		window.setVisible(true);
 		
+		final int DELAY = 100;
+		Timer t = new Timer(DELAY, new
+			ActionListener(){
+				public void actionPerformed(ActionEvent event){
+					maze.drawMaze();
+				}
+			}
+		);
+		t.start();
 		System.out.println("end of contructor");
 		
 	}
