@@ -1,6 +1,9 @@
 package test;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
+
+import javax.swing.JLabel;
 
 public class Room {
 
@@ -29,7 +32,9 @@ public class Room {
 		return walls[direction];
 	}
 	
-	public void drawRoom(Graphics g){
-		
+	public void drawRoom(int width, int x, int y){
+		JLabel room = new JLabel();
+		Rectangle rect = new Rectangle(width, width, x, y);
+		Icon icon = new Icon();
 	}
 }
