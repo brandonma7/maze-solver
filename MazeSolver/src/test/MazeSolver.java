@@ -6,12 +6,12 @@ import javax.swing.*;
 
 public class MazeSolver {
 
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 1000;
+	public static final int WIDTH = 600;
+	public static final int HEIGHT = 750;
 	
 	private Maze maze;
 	private Robot rbt;
-	private Timer timer;
+	//private Timer timer;
 	
 	public static void main(String[] args){
 		
@@ -23,7 +23,6 @@ public class MazeSolver {
 		maze = null;
 		this.promptDimensions();
 		while(maze == null){
-			System.out.println("flag");
 		}
 		
 		rbt = new RightHandRobot(0, 0, Room.EAST);
@@ -31,13 +30,9 @@ public class MazeSolver {
 		JFrame window = new JFrame("Maze Solver 1.0");
 		
 		JPanel mainCont = new JPanel();
-		JPanel gridArea = new JPanel();
 		JPanel buttonArea = new JPanel();
 		
-		window.setSize(WIDTH, HEIGHT);
-		mainCont.setLayout(new BoxLayout(mainCont, BoxLayout.PAGE_AXIS));
-		
-		gridArea.setSize(WIDTH - 100, WIDTH - 100);
+		mainCont.setLayout(new BorderLayout());
 		
 		JButton startLocation = new JButton("Set Start Location");
 		JButton endLocation = new JButton("Set End Location");
@@ -53,27 +48,19 @@ public class MazeSolver {
 		buttonArea.add(clear);
 		buttonArea.add(start);
 		
-		maze.addMazeToPanel(gridArea);
+		maze.setSize(maze.getWidth(), maze.getHeight());
 		
-		mainCont.add(gridArea);
-		mainCont.add(buttonArea);
+		maze.drawMaze();
+
+		mainCont.add(buttonArea, BorderLayout.NORTH);
+		mainCont.add(maze, BorderLayout.CENTER);
 		
 		window.add(mainCont);
-		
+
+		window.setSize(WIDTH, HEIGHT);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
 		window.setVisible(true);
-		
-		final int DELAY = 100;
-		Timer t = new Timer(DELAY, new
-			ActionListener(){
-				public void actionPerformed(ActionEvent event){
-					maze.drawMaze();
-				}
-			}
-		);
-		t.start();
-		System.out.println("end of contructor");
 		
 	}
 	
