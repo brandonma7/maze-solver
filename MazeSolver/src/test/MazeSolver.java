@@ -2,6 +2,7 @@ package test;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 public class MazeSolver {
@@ -10,8 +11,6 @@ public class MazeSolver {
 	public static final int HEIGHT = 750;
 	
 	private Maze maze;
-	private Robot rbt;
-	//private Timer timer;
 	
 	public static void main(String[] args){
 		
@@ -24,8 +23,6 @@ public class MazeSolver {
 		this.promptDimensions();
 		while(maze == null){
 		}
-		
-		rbt = new RightHandRobot(0, 0, Room.EAST);
 
 		JFrame window = new JFrame("Maze Solver 1.0");
 		
@@ -61,6 +58,33 @@ public class MazeSolver {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
 		window.setVisible(true);
+
+		clear.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				maze.clearMaze();
+			}
+			
+		});
+
+		startLocation.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				maze.setStart();
+			}
+			
+		});
+
+		endLocation.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				maze.setEnd();
+			}
+			
+		});
 		
 	}
 	

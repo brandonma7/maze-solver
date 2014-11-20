@@ -2,17 +2,10 @@ package test;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-
-import javax.swing.Icon;
-import javax.swing.JLabel;
+import java.awt.geom.Rectangle2D;
 
 public class Room {
 
@@ -29,6 +22,8 @@ public class Room {
 	private int x;
 	private int y;
 	private final int width;
+	
+	private boolean start, end;
 	
 	public Room(int x, int y, int width){
 		
@@ -60,6 +55,29 @@ public class Room {
 		return walls[direction];
 	}
 	
+	public void setStart(){
+		System.out.println("setStart");
+		start = !start;
+	}
+	
+	public void setEnd(){
+		end = !end;
+	}
+	
+	public boolean isStart(){
+		return start;
+	}
+	
+	public boolean isEnd(){
+		return end;
+	}
+	
+	public void clearWalls(){
+		for(int i = 0; i < walls.length; i++){
+			walls[i] = false;
+		}
+	}
+	
 	public void draw(Graphics2D g2){
 		
 		g2.setColor(Color.BLACK);
@@ -76,6 +94,20 @@ public class Room {
 		right = new Line2D.Double(r2, r3);
 		bottom = new Line2D.Double(r3, r4);
 		left = new Line2D.Double(r4, r1);
+		
+		if(start){
+			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, x + width - 1, y + width - 1);
+			g2.setColor(Color.GREEN);
+			g2.fill(rect);
+		} else if(end){
+			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, x + width - 1, y + width - 1);
+			g2.setColor(Color.RED);
+			g2.fill(rect);
+		} else {
+			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, x + width - 1, y + width - 1);
+			g2.setColor(Color.WHITE);
+			g2.fill(rect);
+		}
 		
 		if(walls[NORTH]){
 			g2.setColor(Color.black);

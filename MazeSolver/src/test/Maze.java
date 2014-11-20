@@ -16,8 +16,13 @@ public class Maze extends JComponent {
 	
 	private int widthOfRoom;
 	
+	private Robot robot;
+	
 	private int startRow, startColumn;
 	private int endRow, endColumn;
+	
+	private boolean settingStart = false;
+	private boolean settingEnd = false;
 	
 	private Point mousePoint;
 	
@@ -27,11 +32,13 @@ public class Maze extends JComponent {
 		
 		this.roomsList = new Room[rows][columns];
 		
-		this.getWidth();
+		this.startColumn = this.startRow = 0;
+		this.endColumn = columns - 1;
+		this.endRow = rows - 1;
 		
-		widthOfRoom = (MazeSolver.WIDTH - 10) / columns;
-		if(widthOfRoom > (MazeSolver.HEIGHT * 3 / 4) / rows)
-			widthOfRoom = (MazeSolver.HEIGHT * 3 / 4) / rows;
+		this.widthOfRoom = (MazeSolver.WIDTH - 10) / columns;
+		if(this.widthOfRoom > (MazeSolver.HEIGHT * 3 / 4) / rows)
+			this.widthOfRoom = (MazeSolver.HEIGHT * 3 / 4) / rows;
 		
 		for(int i = 0; i < rows; i++){
 			for(int k = 0; k < columns; k++){
@@ -40,6 +47,12 @@ public class Maze extends JComponent {
 				
 			}
 		}
+		
+		roomsList[startRow][startColumn].setStart();
+		roomsList[endRow][endColumn].setEnd();
+		
+		robot = new RightHandRobot(startRow, startColumn, Room.EAST, widthOfRoom * 3 / 5, widthOfRoom / 5);
+		
 		addMouseListener(new MouseAdapter() {
 		      
 		      @Override
@@ -52,30 +65,59 @@ public class Maze extends JComponent {
 		        
 		        int x = (int)mousePoint.getX()%widthOfRoom;
 		        int y = (int)mousePoint.getY()%widthOfRoom;
-
-		        System.out.println(mousePoint.getX() + ", " + mousePoint.getX());
-		        System.out.println(column + ", " + row);
-		        System.out.println(x + ", " + y);
 		        
-		        int wall = determineWall(x, y);
+		        System.out.println("clicked" + column + " " + row);
+		        System.out.println("set" + startColumn + " " + startRow);
 		        
-		        if(row >= rows || column >= columns) wall = -1;
-		        
-		        if(wall != -1){
-			        roomsList[row][column].toggleWall(wall);
-			        try{
-				        switch(wall){
-				        case(Room.NORTH): roomsList[row-1][column].toggleWall(Room.SOUTH);break;
-				        case(Room.EAST): roomsList[row][column+1].toggleWall(Room.WEST);break;
-				        case(Room.SOUTH): roomsList[row+1][column].toggleWall(Room.NORTH);break;
-				        case(Room.WEST): roomsList[row][column-1].toggleWall(Room.EAST);break;
-			        }
-			        } catch(IndexOutOfBoundsException e){
-			        	//do nothing
-			        }
+		        if(settingStart){
+		        	
+		        	if(row >= rows) row = rows - 1;
+		        	if(column >= columns) column = columns - 1;
+		        	
+		        	roomsList[startRow][startColumn].setStart();
+		        	roomsList[row][column].setStart();
+		        	
+		        	startRow = row;
+		        	startColumn = column;
+		        	
+		        	settingStart = false;
+		        	
+		        } else if(settingEnd){
+		        	
+		        	if(row >= rows) row = rows - 1;
+		        	if(column >= columns) column = columns - 1;
+		        	
+		        	roomsList[endRow][endColumn].setEnd();
+		        	roomsList[row][column].setEnd();
+		        	
+		        	endRow = row;
+		        	endColumn = column;
+		        	
+		        	settingEnd = false;
+		        	
+		        } else {
 			        
-			        repaint();
+			        int wall = determineWall(x, y);
+			        
+			        if(row >= rows || column >= columns) wall = -1;
+			        
+			        if(wall != -1){
+				        roomsList[row][column].toggleWall(wall);
+				        try{
+					        switch(wall){
+					        case(Room.NORTH): roomsList[row-1][column].toggleWall(Room.SOUTH);break;
+					        case(Room.EAST): roomsList[row][column+1].toggleWall(Room.WEST);break;
+					        case(Room.SOUTH): roomsList[row+1][column].toggleWall(Room.NORTH);break;
+					        case(Room.WEST): roomsList[row][column-1].toggleWall(Room.EAST);break;
+				        }
+				        } catch(IndexOutOfBoundsException e){
+				        	//do nothing
+				        }
+			        }
+		        	
 		        }
+		        
+		        repaint();
 		        
 		      }
 		});
@@ -104,19 +146,12 @@ public class Maze extends JComponent {
 	    		roomsList[i][k].draw(g2);
 	    	}
 	    }
+	    
+	    robot.drawRobot(g2);
 	}
 	
 	public void drawMaze(){
-		//JPanel maze = new JPanel();
-		//maze.setSize(MazeSolver.WIDTH - 100, MazeSolver.WIDTH - 100);
-		
 		repaint();
-		
-		/*for(int i = 0; i < roomsList.length; i++){
-			for(int k = 0; k < roomsList[i].length; k++){
-				roomsList[i][k].repaint();
-			}
-		}*/
 	}
 	
 	public void setRows(int rows){
@@ -149,6 +184,23 @@ public class Maze extends JComponent {
 		int height;
 		height = rows * widthOfRoom;
 		return height;
+	}
+	
+	public void setStart(){
+		settingStart = !settingStart;
+	}
+	
+	public void setEnd(){
+		settingEnd = !settingEnd;
+	}
+	
+	public void clearMaze(){
+		for(int i = 0; i < roomsList.length; i++){
+			for(int k = 0; k < roomsList[i].length; k++){
+				roomsList[i][k].clearWalls();
+			}
+		}
+		repaint();
 	}
 	
 }
