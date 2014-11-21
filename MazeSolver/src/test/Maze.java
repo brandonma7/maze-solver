@@ -66,9 +66,6 @@ public class Maze extends JComponent {
 		        int x = (int)mousePoint.getX()%widthOfRoom;
 		        int y = (int)mousePoint.getY()%widthOfRoom;
 		        
-		        System.out.println("clicked" + column + " " + row);
-		        System.out.println("set" + startColumn + " " + startRow);
-		        
 		        if(settingStart){
 		        	
 		        	if(row >= rows) row = rows - 1;
@@ -138,7 +135,9 @@ public class Maze extends JComponent {
 		return -1;
 	}
 	
+	@Override
 	public void paintComponent(Graphics g){
+
 	    Graphics2D g2 = (Graphics2D) g;
 	    
 	    for(int i = 0; i < roomsList.length; i++){
@@ -151,6 +150,7 @@ public class Maze extends JComponent {
 	}
 	
 	public void drawMaze(){
+
 		repaint();
 	}
 	
@@ -190,6 +190,11 @@ public class Maze extends JComponent {
 		settingStart = !settingStart;
 	}
 	
+	public int getStartColumn(){return startColumn;}
+	public int getEndColumn(){return endColumn;}
+	public int getStartRow(){return startRow;}
+	public int getEndRow(){return endRow;}
+	
 	public void setEnd(){
 		settingEnd = !settingEnd;
 	}
@@ -199,6 +204,44 @@ public class Maze extends JComponent {
 			for(int k = 0; k < roomsList[i].length; k++){
 				roomsList[i][k].clearWalls();
 			}
+		}
+		repaint();
+	}
+	
+	public void rotateRobot(){
+		robot.turnRight();
+		repaint();
+	}
+	
+	public boolean checkWall(int row, int column, int direction){
+		return roomsList[row][column].isOpen(direction);
+	}
+	
+	public void traverseMaze(){
+		createOuterWalls();
+		robot.traverseMaze(this);
+	}
+	
+	public boolean isSolved(int row, int column){
+		return roomsList[row][column].isEnd();
+	}
+	
+	private void createOuterWalls(){
+		for(int i = 0; i < columns; i++){
+			if(roomsList[0][i].isOpen(Room.NORTH))
+				roomsList[0][i].toggleWall(Room.NORTH);
+		}
+		for(int i = 0; i < rows; i++){
+			if(roomsList[i][columns - 1].isOpen(Room.EAST))
+				roomsList[i][columns - 1].toggleWall(Room.EAST);
+		}
+		for(int i = 0; i < columns; i++){
+			if(roomsList[rows - 1][i].isOpen(Room.SOUTH))
+				roomsList[rows - 1][i].toggleWall(Room.SOUTH);
+		}
+		for(int i = 0; i < rows; i++){
+			if(roomsList[i][0].isOpen(Room.WEST))
+				roomsList[i][0].toggleWall(Room.WEST);
 		}
 		repaint();
 	}

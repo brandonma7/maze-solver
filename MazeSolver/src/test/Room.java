@@ -52,11 +52,10 @@ public class Room {
 	}
 	
 	public boolean isOpen(int direction){
-		return walls[direction];
+		return !walls[direction];
 	}
 	
 	public void setStart(){
-		System.out.println("setStart");
 		start = !start;
 	}
 	

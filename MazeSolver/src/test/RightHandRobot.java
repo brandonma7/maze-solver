@@ -1,12 +1,10 @@
 package test;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.*;
+
+import javax.swing.*;
 
 public class RightHandRobot implements Robot {
 
@@ -25,23 +23,70 @@ public class RightHandRobot implements Robot {
 	}
 	
 	@Override
-	public void traverseMaze() {
-		// TODO Auto-generated method stub
+	public void traverseMaze(Maze maze) {
+
+		this.x = maze.getStartColumn();
+		this.y = maze.getStartRow();
+			
+		while(maze.checkWall(y, x, direction))
+			turnRight();
+		turnLeft();
+		
+		final Timer timer = new Timer(50, null);
+		timer.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				turnRight();
+				if(!maze.isSolved(x, y)){
+					while(!maze.checkWall(y, x, direction))
+						turnLeft();
+					
+					moveForward();
+					
+					maze.drawMaze();
+				} else {
+					System.out.println("solved");
+					timer.stop();
+				}
+			}
+		});
+		
+		timer.start();
 		
 	}
 	
-	public void drawRobot(Graphics g){
+	private void moveForward() {
+		if(direction == Room.NORTH){
+			y--;
+		} else if(direction == Room.EAST){
+			x++;
+		} else if(direction == Room.SOUTH){
+			y++;
+		} else if(direction == Room.WEST){
+			x--;
+		}
+	}
 
+	public void drawRobot(Graphics g){
+		
 		Graphics2D g2 = (Graphics2D) g;
+		
+		int widthOfRoom = width + padding + padding;
 		
 		g2.setColor(Color.BLUE);
 		
-		Rectangle2D.Double rect = new Rectangle2D.Double(x + padding, y + padding, x + width, y + width);
+		Rectangle2D.Double rect = new Rectangle2D.Double(
+				x * widthOfRoom + padding,
+				y * widthOfRoom + padding,
+				width,
+				width
+				);
 		
 		g2.fill(rect);
 		
-		GeneralPath path = determineDirection();
-		
+		GeneralPath path = determineDirectionPath();
+		g2.setColor(Color.YELLOW);
 		g2.fill(path);
 		
 	}
@@ -53,35 +98,38 @@ public class RightHandRobot implements Robot {
 	}
 
 	@Override
-	public void turnRight(int numTurns) {
-		direction = (direction + numTurns) % 4;
+	public void turnRight() {
+		direction = (direction + 1) % 4;
 	}
 
 	@Override
-	public void turnLeft(int numTurns) {
-		direction = (direction - numTurns) % 4;
+	public void turnLeft() {
+		turnRight();
+		turnRight();
+		turnRight();
 	}
 	
-	private GeneralPath determineDirection(){
+	private GeneralPath determineDirectionPath(){
 		
 		Point2D.Double r1, r2, r3;
+		int widthOfRoom = width + padding + padding;
 		
 		if(direction == Room.NORTH){
-			r1 = new Point2D.Double(x + padding + (width / 2), padding / 2);
-			r2 = new Point2D.Double(x + padding, y + padding);
-			r3 = new Point2D.Double(x + width + padding, y + padding);
+			r1 = new Point2D.Double(x * widthOfRoom + padding + (width / 2), y * widthOfRoom + padding / 2);
+			r2 = new Point2D.Double(x * widthOfRoom + padding, y * widthOfRoom + padding);
+			r3 = new Point2D.Double(x * widthOfRoom + width + padding, y * widthOfRoom + padding);
 		}else if(direction == Room.EAST){
-			r1 = new Point2D.Double(x + width + (width / 8) + padding, (y + y + width) / 2 + padding);
-			r2 = new Point2D.Double(x + width + padding, y + padding);
-			r3 = new Point2D.Double(x + width + padding, y + width + padding);
+			r1 = new Point2D.Double(x * widthOfRoom + width + (width / 8) + padding, (y * widthOfRoom + y * widthOfRoom + width) / 2 + padding);
+			r2 = new Point2D.Double(x * widthOfRoom + width + padding, y * widthOfRoom + padding);
+			r3 = new Point2D.Double(x * widthOfRoom + width + padding, y * widthOfRoom + width + padding);
 		} else if(direction == Room.SOUTH){
-			r1 = new Point2D.Double(x + width + (width / 8) + padding, (y + y + width) / 2 + padding);
-			r2 = new Point2D.Double(x + width + padding, y + padding);
-			r3 = new Point2D.Double(x + width + padding, y + width + padding);
+			r1 = new Point2D.Double(x * widthOfRoom + padding + (width / 2), y * widthOfRoom + width + padding + (padding / 2));
+			r2 = new Point2D.Double(x * widthOfRoom + padding, y * widthOfRoom + width + padding);
+			r3 = new Point2D.Double(x * widthOfRoom + width + padding, y * widthOfRoom + width + padding);
 		} else {
-			r1 = new Point2D.Double(x + width + (width / 8) + padding, (y + y + width) / 2 + padding);
-			r2 = new Point2D.Double(x + width + padding, y + padding);
-			r3 = new Point2D.Double(x + width + padding, y + width + padding);
+			r1 = new Point2D.Double(x * widthOfRoom + (padding / 2), y * widthOfRoom + (width / 2) + padding);
+			r2 = new Point2D.Double(x * widthOfRoom + padding, y * widthOfRoom + padding);
+			r3 = new Point2D.Double(x * widthOfRoom + padding, y * widthOfRoom + width + padding);
 		}
 		
 		Line2D.Double l1 = new Line2D.Double(r2,r1);

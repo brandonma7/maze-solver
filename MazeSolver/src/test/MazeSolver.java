@@ -86,6 +86,24 @@ public class MazeSolver {
 			
 		});
 		
+		rotate.addActionListener(new ActionListener(){
+			
+			@Override
+			public void actionPerformed(ActionEvent e){
+				maze.rotateRobot();
+			}
+			
+		});
+		
+		start.addActionListener(new ActionListener(){
+			
+			@Override
+			public void actionPerformed(ActionEvent e){
+				maze.traverseMaze();
+			}
+			
+		});
+		
 	}
 	
 	public void promptDimensions(){
