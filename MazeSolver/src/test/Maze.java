@@ -51,7 +51,7 @@ public class Maze extends JComponent {
 		roomsList[startRow][startColumn].setStart();
 		roomsList[endRow][endColumn].setEnd();
 		
-		robot = new RightHandRobot(startRow, startColumn, Room.EAST, widthOfRoom * 3 / 5, widthOfRoom / 5);
+		robot = new RightHandRobot(startRow, startColumn, Room.EAST, ((double)widthOfRoom) * 3 / 5, ((double)widthOfRoom) / 5);
 		
 		addMouseListener(new MouseAdapter() {
 		      

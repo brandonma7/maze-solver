@@ -10,11 +10,11 @@ public class RightHandRobot implements Robot {
 
 	private int x;
 	private int y;
-	private int width;
+	private double width;
 	private int direction;
-	private int padding;
+	private double padding;
 	
-	public RightHandRobot(int x, int y, int direction, int width, int padding){
+	public RightHandRobot(int x, int y, int direction, double width, double padding){
 		this.x = x;
 		this.y = y;
 		this.direction = direction;
@@ -32,13 +32,13 @@ public class RightHandRobot implements Robot {
 			turnRight();
 		turnLeft();
 		
-		final Timer timer = new Timer(50, null);
+		final Timer timer = new Timer(250, null);
 		timer.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				turnRight();
-				if(!maze.isSolved(x, y)){
+				if(!maze.isSolved(y, x)){
 					while(!maze.checkWall(y, x, direction))
 						turnLeft();
 					
@@ -72,7 +72,7 @@ public class RightHandRobot implements Robot {
 		
 		Graphics2D g2 = (Graphics2D) g;
 		
-		int widthOfRoom = width + padding + padding;
+		double widthOfRoom = width + padding + padding;
 		
 		g2.setColor(Color.BLUE);
 		
@@ -112,7 +112,7 @@ public class RightHandRobot implements Robot {
 	private GeneralPath determineDirectionPath(){
 		
 		Point2D.Double r1, r2, r3;
-		int widthOfRoom = width + padding + padding;
+		double widthOfRoom = width + padding + padding;
 		
 		if(direction == Room.NORTH){
 			r1 = new Point2D.Double(x * widthOfRoom + padding + (width / 2), y * widthOfRoom + padding / 2);
