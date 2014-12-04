@@ -22,6 +22,7 @@ public class MazeSolver {
 		maze = null;
 		this.promptDimensions();
 		while(maze == null){
+				System.out.print("flag");
 		}
 
 		JFrame window = new JFrame("Maze Solver 1.0");
@@ -145,7 +146,5 @@ public class MazeSolver {
 		window.pack();
 		window.setVisible(true);
 	}
-	
-	public void solveMaze(){}
 	
 }

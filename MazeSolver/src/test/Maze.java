@@ -169,10 +169,6 @@ public class Maze extends JComponent {
 	public int getColumns(){
 		return columns;
 	}
-	
-	public boolean isOpen(int row, int column, int direction){
-		return true;//((Room) roomsList[column][row].getIcon()).isOpen(direction);
-	}
 
 	public int getWidth(){
 		int width;
