@@ -13,6 +13,7 @@ public class RightHandRobot implements Robot {
 	private double width;
 	private int direction;
 	private double padding;
+	private int counter;
 	
 	public RightHandRobot(int x, int y, int direction, double width, double padding){
 		this.x = x;
@@ -20,11 +21,14 @@ public class RightHandRobot implements Robot {
 		this.direction = direction;
 		this.width = width;
 		this.padding = padding;
+		this.counter = 0;
 	}
 	
 	@Override
 	public void traverseMaze(Maze maze) {
 
+		counter = 0;
+		
 		this.x = maze.getStartColumn();
 		this.y = maze.getStartRow();
 			
@@ -46,7 +50,7 @@ public class RightHandRobot implements Robot {
 					
 					maze.drawMaze();
 				} else {
-					System.out.println("solved");
+					maze.finishPrompt(counter, true);
 					timer.stop();
 				}
 			}
@@ -66,6 +70,7 @@ public class RightHandRobot implements Robot {
 		} else if(direction == Room.WEST){
 			x--;
 		}
+		counter++;
 	}
 
 	public void drawRobot(Graphics g){

@@ -1,12 +1,19 @@
 package test;
 
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class Maze extends JComponent {
 
@@ -240,6 +247,48 @@ public class Maze extends JComponent {
 				roomsList[i][0].toggleWall(Room.WEST);
 		}
 		repaint();
+	}
+	
+	public void finishPrompt(int count, boolean success){
+		JFrame window = new JFrame("Maze Solver 1.0");
+		JLabel statement;
+		if(success){
+			statement = new JLabel("Success! Took " + count + " room visits.");
+		} else {
+			statement = new JLabel("Your maze is unsolvable with the current algorithm!");
+		}
+		JButton restart = new JButton("Restart");
+		JButton cont = new JButton("Continue");
+		
+		restart.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clearMaze();
+				window.setVisible(false);
+				window.dispose();
+			}
+			
+		});
+		
+		cont.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				window.setVisible(false);
+				window.dispose();
+			}
+			
+		});
+		
+		window.add(statement);
+		window.add(restart);
+		window.add(cont);
+		
+		window.setLayout(new FlowLayout());
+		window.setResizable(false);
+		window.pack();
+		window.setVisible(true);
 	}
 	
 }
