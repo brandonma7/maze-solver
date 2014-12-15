@@ -6,10 +6,9 @@ public interface Robot {
 	
 	public void traverseMaze(Maze maze);
 	
-	public boolean hasVisited();
-	
 	public void turnRight();
 	public void turnLeft();
+	public void moveForward();
 
 	public void drawRobot(Graphics g);
 

@@ -7,6 +7,12 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+/**
+ * This class holds all necessary attributes of a room in the maze.
+ * @author Brandon Adams, Kaya Ota, Guillermo Collin
+ *
+ */
+
 public class Room {
 
 	public static final int NORTH = 0;
@@ -24,6 +30,13 @@ public class Room {
 	private final int width;
 	
 	private boolean start, end;
+
+	/**
+	 * Creates a Room object with specified x, y, and width
+	 * @param x Specific x coordinate of room.
+	 * @param y Specific y coordinate of room.
+	 * @param width
+	 */
 	
 	public Room(int x, int y, int width){
 		
@@ -40,24 +53,37 @@ public class Room {
 		
 	}
 	
-	public void toggleWall(int x, int y){
-		
-		int direction = 0;
-		
-		walls[direction] = !walls[direction];
-	}
+	/**
+	 * If wall is present in specified direction, remove it.
+	 * If wall is absent in specified direction, add one.
+	 * @param direction
+	 */
 	
 	public void toggleWall(int direction){
 		walls[direction] = !walls[direction];
 	}
 	
+	/**
+	 * Is there a wall in specified direction?
+	 * @param direction
+	 * @return True if there is no wall.
+	 */
+	
 	public boolean isOpen(int direction){
 		return !walls[direction];
 	}
 	
+	/**
+	 * Set this room as the starting point for the maze.
+	 */
+	
 	public void setStart(){
 		start = !start;
 	}
+	
+	/**
+	 * Set this room as the end point for the maze.
+	 */
 	
 	public void setEnd(){
 		end = !end;
@@ -71,28 +97,39 @@ public class Room {
 		return end;
 	}
 	
+	/**
+	 * Remove all walls of this room.
+	 */
+	
 	public void clearWalls(){
 		for(int i = 0; i < walls.length; i++){
 			walls[i] = false;
 		}
 	}
 	
+	/**
+	 * Draw room and walls.
+	 * If starting point-room is green.
+	 * If end point-room is red.
+	 * If neither-room is white.
+	 * If wall is present-thick black border.
+	 * If wall is absent-thin gray border.
+	 * @param g2
+	 */
+	
 	public void draw(Graphics2D g2){
 		
 		g2.setColor(Color.BLACK);
-		
-		Point2D.Double r1,r2,r3,r4;
 
-		r1 = new Point2D.Double(x, y);
-		r2 = new Point2D.Double(x + width - 1, y);
-		r3 = new Point2D.Double(x + width - 1, y + width - 1);
-		r4 = new Point2D.Double(x, y + width - 1);
+		Point2D.Double r1 = new Point2D.Double(x, y);
+		Point2D.Double r2 = new Point2D.Double(x + width - 1, y);
+		Point2D.Double r3 = new Point2D.Double(x + width - 1, y + width - 1);
+		Point2D.Double r4 = new Point2D.Double(x, y + width - 1);
 		
-		Line2D.Double top, right, bottom, left;
-		top = new Line2D.Double(r1, r2);
-		right = new Line2D.Double(r2, r3);
-		bottom = new Line2D.Double(r3, r4);
-		left = new Line2D.Double(r4, r1);
+		Line2D.Double top = new Line2D.Double(r1, r2);
+		Line2D.Double right = new Line2D.Double(r2, r3);
+		Line2D.Double bottom = new Line2D.Double(r3, r4);
+		Line2D.Double left = new Line2D.Double(r4, r1);
 		
 		if(start){
 			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, x + width - 1, y + width - 1);

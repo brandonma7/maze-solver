@@ -5,10 +5,18 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+/**
+ * Class to facilitate maze creation and maze solving. Also holds all the
+ * GUI information for the various windows and action listeners for buttons.
+ * @author Brandon Adams, Kaya Ota, Guillermo Collin
+ *
+ */
+
 public class MazeSolver {
 
 	public static final int WIDTH = 600;
 	public static final int HEIGHT = 750;
+	public static final String TITLE = "Maze Solver 1.0";
 	
 	private Maze maze;
 	
@@ -18,14 +26,21 @@ public class MazeSolver {
 		
 	}
 	
+	/**
+	 * Instantiate Maze Solver and all necessary objects, button action
+	 * listeners, prompt for dimensions, and other such initialization tasks.
+	 */
+	
 	public MazeSolver(){
 		maze = null;
 		this.promptDimensions();
+		
+		//Stall until we have dimensions and thus have instantiated maze.
 		while(maze == null){
 				System.out.print("flag");
 		}
 
-		JFrame window = new JFrame("Maze Solver 1.0");
+		JFrame window = new JFrame(TITLE);
 		
 		JPanel mainCont = new JPanel();
 		JPanel buttonArea = new JPanel();
@@ -106,9 +121,13 @@ public class MazeSolver {
 		});
 		
 	}
+	/**
+	 * Creates window at beginning of run to prompt user for the 
+	 * dimensions of the maze they would like to create.
+	 */
 	
 	public void promptDimensions(){
-		JFrame window = new JFrame("Maze Solver 1.0");
+		JFrame window = new JFrame(TITLE);
 		
 		final int FIELD_WIDTH = 5;
 		
@@ -142,6 +161,56 @@ public class MazeSolver {
 		
 		window.setLayout(new FlowLayout());
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setResizable(false);
+		window.pack();
+		window.setVisible(true);
+	}
+	
+	/**
+	 * Creates pop up box for traversal completion, whether the traversal was 
+	 * successful or not.
+	 * @param count Number of rooms robot visited
+	 * @param success Whether traversal was successful or not.
+	 * @param maze Instance of maze for action listener buttons.
+	 */
+	
+	public static void finishPrompt(int count, boolean success, Maze maze){
+		JFrame window = new JFrame(TITLE);
+		JLabel statement;
+		if(success){
+			statement = new JLabel("Success! Took " + count + " room visits.");
+		} else {
+			statement = new JLabel("Your maze is unsolvable with the current algorithm!");
+		}
+		JButton restart = new JButton("Restart");
+		JButton cont = new JButton("Continue");
+		
+		restart.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				maze.clearMaze();
+				window.setVisible(false);
+				window.dispose();
+			}
+			
+		});
+		
+		cont.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				window.setVisible(false);
+				window.dispose();
+			}
+			
+		});
+		
+		window.add(statement);
+		window.add(restart);
+		window.add(cont);
+		
+		window.setLayout(new FlowLayout());
 		window.setResizable(false);
 		window.pack();
 		window.setVisible(true);

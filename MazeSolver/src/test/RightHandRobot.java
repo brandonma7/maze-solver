@@ -6,14 +6,32 @@ import java.awt.geom.*;
 
 import javax.swing.*;
 
+/**
+ * Specific implementation of Robot interface. The exact algorithm of this robot
+ * to solve the maze in not actually relevant to project, it is just an example
+ * to show that the program works.
+ * @author Brandon Adams, Kaya Ota, Guillermo Collin
+ *
+ */
+
 public class RightHandRobot implements Robot {
 
 	private int x;
 	private int y;
 	private double width;
 	private int direction;
-	private double padding;
-	private int counter;
+	private double padding;//Distance between robot and walls of room
+	private int counter;//How many rooms the robot has visited
+	final private int SPEED = 250;//How fast robot moves from one room to another
+	
+	/**
+	 * Instantiate robot that follows right hand rule to solve maze.
+	 * @param x Start column
+	 * @param y Start row
+	 * @param direction Start direction
+	 * @param width 
+	 * @param padding Distance between robot and north/west walls
+	 */
 	
 	public RightHandRobot(int x, int y, int direction, double width, double padding){
 		this.x = x;
@@ -24,6 +42,11 @@ public class RightHandRobot implements Robot {
 		this.counter = 0;
 	}
 	
+	/**
+	 * Robot will attempt to solve maze via right hand rule
+	 * maze Maze instance to traverse
+	 */
+	
 	@Override
 	public void traverseMaze(Maze maze) {
 
@@ -32,12 +55,29 @@ public class RightHandRobot implements Robot {
 		this.x = maze.getStartColumn();
 		this.y = maze.getStartRow();
 			
+		//Setting start direction
 		while(maze.checkWall(y, x, direction))
 			turnRight();
 		turnLeft();
 		
-		final Timer timer = new Timer(250, null);
-		timer.addActionListener(new ActionListener(){
+		final Timer timer = new Timer(SPEED, null);
+		timer.addActionListener(solveAlgorithm(maze, timer));
+		
+		timer.start();
+		
+	}
+	
+	/**
+	 * Specific algorithm for right hand rule
+	 * @param maze Instance of maze to solve.
+	 * @param timer Instance of timer that facilitates the loop for this algorithm
+	 * @return ActionListener to return to timer. ActionPerformed should contain code
+	 * that is repeated over and over until maze is solved.
+	 */
+	
+	public ActionListener solveAlgorithm(Maze maze, Timer timer){
+		
+		return new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -50,17 +90,19 @@ public class RightHandRobot implements Robot {
 					
 					maze.drawMaze();
 				} else {
-					maze.finishPrompt(counter, true);
+					MazeSolver.finishPrompt(counter, true, maze);
 					timer.stop();
 				}
 			}
-		});
-		
-		timer.start();
+		};
 		
 	}
 	
-	private void moveForward() {
+	/**
+	 * Move robot one square forward in chosen direction.
+	 */
+	
+	public void moveForward() {
 		if(direction == Room.NORTH){
 			y--;
 		} else if(direction == Room.EAST){
@@ -72,6 +114,31 @@ public class RightHandRobot implements Robot {
 		}
 		counter++;
 	}
+
+	/**
+	 * Rotates robot 90 degrees clockwise.
+	 */
+	
+	@Override
+	public void turnRight() {
+		direction = (direction + 1) % 4;
+	}
+
+	/**
+	 * Rotates robot 90 degrees counter-clockwise. (Technically it rotates
+	 * robot 270 degrees clockwise, but now we're just splitting hairs)
+	 */
+
+	@Override
+	public void turnLeft() {
+		turnRight();
+		turnRight();
+		turnRight();
+	}
+	
+	/**
+	 * How to draw robot.
+	 */
 
 	public void drawRobot(Graphics g){
 		
@@ -95,24 +162,12 @@ public class RightHandRobot implements Robot {
 		g2.fill(path);
 		
 	}
-
-	@Override
-	public boolean hasVisited() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void turnRight() {
-		direction = (direction + 1) % 4;
-	}
-
-	@Override
-	public void turnLeft() {
-		turnRight();
-		turnRight();
-		turnRight();
-	}
+	
+	/**
+	 * This method uses the robot's direction and coordinates to create a 
+	 * GeneralPath object to give a visual representation of robot's direction.
+	 * @return GeneralPath to draw for front of robot based on direction.
+	 */
 	
 	private GeneralPath determineDirectionPath(){
 		
