@@ -10,7 +10,7 @@ import javax.swing.*;
  * Specific implementation of Robot interface. The exact algorithm of this robot
  * to solve the maze in not actually relevant to project, it is just an example
  * to show that the program works.
- * @author Brandon Adams, Kaya Ota, Guillermo Collin
+ * @author Brandon Adams, Kaya Ota, Guillermo Colin
  *
  */
 

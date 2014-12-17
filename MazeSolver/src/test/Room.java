@@ -9,7 +9,7 @@ import java.awt.geom.Rectangle2D;
 
 /**
  * This class holds all necessary attributes of a room in the maze.
- * @author Brandon Adams, Kaya Ota, Guillermo Collin
+ * @author Brandon Adams, Kaya Ota, Guillermo Colin
  *
  */
 
@@ -120,11 +120,14 @@ public class Room {
 	public void draw(Graphics2D g2){
 		
 		g2.setColor(Color.BLACK);
+		
+		//Rooms appear slightly off, adding this offset fixes that.
+		int widthOffset = -1;
 
 		Point2D.Double r1 = new Point2D.Double(x, y);
-		Point2D.Double r2 = new Point2D.Double(x + width - 1, y);
-		Point2D.Double r3 = new Point2D.Double(x + width - 1, y + width - 1);
-		Point2D.Double r4 = new Point2D.Double(x, y + width - 1);
+		Point2D.Double r2 = new Point2D.Double(x + width + widthOffset, y);
+		Point2D.Double r3 = new Point2D.Double(x + width + widthOffset, y + width + widthOffset);
+		Point2D.Double r4 = new Point2D.Double(x, y + width + widthOffset);
 		
 		Line2D.Double top = new Line2D.Double(r1, r2);
 		Line2D.Double right = new Line2D.Double(r2, r3);
@@ -132,15 +135,15 @@ public class Room {
 		Line2D.Double left = new Line2D.Double(r4, r1);
 		
 		if(start){
-			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, x + width - 1, y + width - 1);
+			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, x + width + widthOffset, y + width + widthOffset);
 			g2.setColor(Color.GREEN);
 			g2.fill(rect);
 		} else if(end){
-			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, x + width - 1, y + width - 1);
+			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, x + width + widthOffset, y + width + widthOffset);
 			g2.setColor(Color.RED);
 			g2.fill(rect);
 		} else {
-			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, x + width - 1, y + width - 1);
+			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, x + width + widthOffset, y + width + widthOffset);
 			g2.setColor(Color.WHITE);
 			g2.fill(rect);
 		}

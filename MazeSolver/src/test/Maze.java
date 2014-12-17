@@ -10,7 +10,7 @@ import javax.swing.JComponent;
 
 /**
  * Maze for the user to edit and the robot to traverse.
- * @author Brandon Adams, Kaya Ota, Guillermo Collin
+ * @author Brandon Adams, Kaya Ota, Guillermo Colin
  *
  */
 
@@ -318,11 +318,11 @@ public class Maze extends JComponent {
 	        roomsList[row][column].toggleWall(wall);
 	        try{
 		        switch(wall){
-		        case(Room.NORTH): roomsList[row-1][column].toggleWall(Room.SOUTH);break;
-		        case(Room.EAST): roomsList[row][column+1].toggleWall(Room.WEST);break;
-		        case(Room.SOUTH): roomsList[row+1][column].toggleWall(Room.NORTH);break;
-		        case(Room.WEST): roomsList[row][column-1].toggleWall(Room.EAST);break;
-	        }
+			        case(Room.NORTH): roomsList[row-1][column].toggleWall(Room.SOUTH);break;
+			        case(Room.EAST): roomsList[row][column+1].toggleWall(Room.WEST);break;
+			        case(Room.SOUTH): roomsList[row+1][column].toggleWall(Room.NORTH);break;
+			        case(Room.WEST): roomsList[row][column-1].toggleWall(Room.EAST);break;
+		        }
 	        } catch(IndexOutOfBoundsException e){
 	        	//do nothing
 	        }

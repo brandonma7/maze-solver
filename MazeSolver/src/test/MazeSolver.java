@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * Class to facilitate maze creation and maze solving. Also holds all the
  * GUI information for the various windows and action listeners for buttons.
- * @author Brandon Adams, Kaya Ota, Guillermo Collin
+ * @author Brandon Adams, Kaya Ota, Guillermo Colin
  *
  */
 
@@ -37,7 +37,7 @@ public class MazeSolver {
 		
 		//Stall until we have dimensions and thus have instantiated maze.
 		while(maze == null){
-				System.out.print("flag");
+				System.out.print("Stall");
 		}
 
 		JFrame window = new JFrame(TITLE);
